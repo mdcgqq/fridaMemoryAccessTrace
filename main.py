@@ -86,7 +86,7 @@ def init_proc(js_file_name: str):
     script = process.create_script(js_file_content)
     script.on("message", my_message_handler)
     script.load()
-    data.rpc = rpcFunc(script.exports)
+    data.rpc = rpcFunc(script.exports_sync)
     data.proc_info['arch'] = data.rpc.get_device_arch()
     data.proc_info['platform'] = data.rpc.get_platform()
     data.proc_info['pointersize'] = data.rpc.get_pointer_size()
@@ -130,7 +130,7 @@ def handle_breakinfo_args():
             if 2 != len(arr):
                 raise Exception('wrapper_input_str input type error')
             if 'offset' == input_type:
-                data.break_point_info['break_addr'] = int(data.rpc.get_module(arr[0]['base']), 16) + int(arr[1], 16)
+                data.break_point_info['break_addr'] = int(data.rpc.get_module(arr[0])['base'], 16) + int(arr[1], 16)
             elif 'symbol' == input_type:
                 data.break_point_info['break_addr'] = int(data.rpc.get_export_by_name(arr[0], arr[1]), 16)
 
